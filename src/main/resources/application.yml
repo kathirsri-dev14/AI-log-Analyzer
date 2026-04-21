@@ -1,0 +1,14 @@
+logging:
+  file:
+    name: logs/app.log
+
+server:
+  port: 8084
+
+spring:
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-4o-mini
