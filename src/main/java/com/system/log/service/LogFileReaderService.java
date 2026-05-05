@@ -16,7 +16,7 @@ public class LogFileReaderService {
     public String readErrorLogs() throws IOException {
 
         Path path = Paths.get("logs/app.log");
-        
+
         List<String> lines = Files.readAllLines(path);
 
         int fromIndex = Math.max(lines.size() - 200, 0);
@@ -27,7 +27,7 @@ public class LogFileReaderService {
                 .filter(line -> line.contains("ERROR") || line.contains("Exception"))
                 .collect(Collectors.joining("\n"));
     }
-    
+
     public List<String> extractErrorBlocks() throws IOException {
 
         Path path = Paths.get("logs/app.log");
@@ -42,7 +42,7 @@ public class LogFileReaderService {
 
         for (String line : recentLogs) {
 
-            if (line.contains("ERROR")) {
+            if (line.matches(".*(ERROR|Exception).*")) {
 
                 if (currentBlock.length() > 0) {
                     errorBlocks.add(currentBlock.toString());
@@ -53,18 +53,18 @@ public class LogFileReaderService {
 
             } else if (currentBlock.length() > 0) {
 
-            	 if (line.startsWith("\t")
-                         || line.trim().startsWith("at ")
-                         || line.contains("Exception")
-                         || line.contains("Caused by")) {
+                if (line.startsWith("\t")
+                        || line.startsWith("    ")
+                        || line.contains(" at ")
+                        || line.contains("Caused by")) {
 
-                     currentBlock.append(line).append("\n");
+                    currentBlock.append(line).append("\n");
 
-                 } else {
-                   
-                     errorBlocks.add(currentBlock.toString());
-                     currentBlock.setLength(0);
-                 }
+                } else {
+
+                    errorBlocks.add(currentBlock.toString());
+                    currentBlock.setLength(0);
+                }
             }
         }
 

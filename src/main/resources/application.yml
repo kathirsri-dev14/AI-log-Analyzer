@@ -1,9 +1,10 @@
 logging:
   file:
     name: logs/app.log
-
-server:
-  port: 8084
+  level:
+    root: INFO
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n%ex"
 
 spring:
   ai:
@@ -12,3 +13,7 @@ spring:
       chat:
         options:
           model: gpt-4o-mini
+
+  jackson:
+    generator:
+      escape-non-ascii: false

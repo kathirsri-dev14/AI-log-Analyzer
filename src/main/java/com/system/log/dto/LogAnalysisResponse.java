@@ -6,8 +6,10 @@ public record LogAnalysisResponse(
 	    boolean topIssue,
 	    String rootCause,
 	    String severity,
-	    String issueCategory,
-	    String incidentSummary,
+	    String className,
+	    String methodName,
+	    int lineNumber,
+	    String faultyLine,
 	    String suggestedFix,
 	    String exampleSolution
 	) {}

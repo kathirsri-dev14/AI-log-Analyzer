@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.system.log.service.LogFileReaderService;
+import com.system.log.service.TestService;
 
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
+@Slf4j
 @RequestMapping("Logging")
 public class LogController {
 	private static final Logger log = LoggerFactory.getLogger(LogController.class);
@@ -23,9 +25,12 @@ public class LogController {
     @Autowired
     private LogFileReaderService logFileReaderService;
 
+    @Autowired
+    private TestService testService;
+
     private final Random random = new Random();
 
-  
+
     @GetMapping("/success")
     public String success() {
         log.info("User login successful for userId=123");
@@ -130,11 +135,52 @@ public class LogController {
 
         return "Random production-like error generated";
     }
-    
+
     // 📄 Read Logs
     @GetMapping("/readLogs")
     public List<String> readLogs() throws IOException {
         return logFileReaderService.extractErrorBlocks();
+    }
+
+    //////////---------Testing phase---------///
+    @GetMapping("/test/npe")
+    public String testNPE() {
+        try {
+            testService.nullPointerScenario();
+        } catch (Exception e) {
+        	 log.error("NPE occurred", e);
+        }
+        return "NPE generated";
+    }
+
+    @GetMapping("/test/divide")
+    public String testDivide() {
+        try {
+            testService.divideByZero();
+        } catch (Exception e) {
+        	log.error("Arithmetic error while performing division operation in TestService.divideByZero", e);
+        }
+        return "Divide error generated";
+    }
+
+    @GetMapping("/test/list")
+    public String testList() {
+        try {
+            testService.listIndexError();
+        } catch (Exception e) {
+        	log.error("List index out of bounds while accessing elements in TestService.listIndexError", e);
+        }
+        return "List error generated";
+    }
+
+    @GetMapping("/test/number")
+    public String testNumber() {
+        try {
+            testService.numberFormatError();
+        } catch (Exception e) {
+        	log.error("Invalid number format encountered in TestService.numberFormatError", e);
+        }
+        return "Number error generated";
     }
 
 }
